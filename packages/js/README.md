@@ -1,7 +1,3 @@
-# js
-
-This library was generated with [Nx](https://nx.dev).
-
-## Running unit tests
-
-Run `nx test js` to execute the unit tests via [Jest](https://jestjs.io).
+# rive-js
+Example of `rive-js` library using nx.
+This readme is going to be display on npm page.

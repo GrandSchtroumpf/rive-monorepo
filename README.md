@@ -1,94 +1,85 @@
+# Rive Workspace Example
+This repository is an example of how could a rive monorepo looks like.
+
+| Name                                     | Version       
+| -----------------------------------------| :------------------:
+| [rive-canvas](./packages/wasm/README.md) | [![badge](https://img.shields.io/npm/v/rive-canvas/latest.svg?style=flat-square)](https://www.npmjs.com/package/rive-canvas)
+| [rive-js](./packages/js/README.md)       | [![badge](https://img.shields.io/npm/v/rive-js/latest.svg?style=flat-square)](https://www.npmjs.com/package/rive-js)
+
+## Setup
+
+1. Scaffold the app: 
+```
+npx create-nx-workspace rive
+> oss
+> no
+cd rive
+```
+
+2. Add `@nrwl/node` plugin for generating libs: 
+```
+npm install -D @nrwl/node
+```
+
+3. Generate both libs: 
+```
+npx nx generate @nrwl/node:library --name=wasm --importPath=rive-wasm --buildable --publishable --strict
+npx nx generate @nrwl/node:library --name=js --importPath=rive-js --buildable --publishable --strict
+```
+
+4. Export ES6 modules: 
+
+In both [`packages/${lib}/tsconfig.lib.json`](./packages/wasm/tsconfig.lib.json#L4) change `"module": "commonjs"` to `"module": "ES6"`.
+
+To understand why, checkout the article [commonjs larger bundles](https://web.dev/commonjs-larger-bundles/).
+
+5. Build: 
+```
+npm run affected:build
+```
+Affected build will only build libs that have been changed since last run (works also for test & lint).
+
+Output is on the `dist/packages` folder.
+
+## Dependency
+The advantage of this workspace is the dependancy graph.
+To demonstrate that let's import `rive-wasm` inside `rive-js`. In `packages/js/src/lib/js.ts` import `rive-wasm`: 
+```typescript
+import { wasm } from 'rive-wasm';
+export function js(): string {
+  return wasm();
+}
+```
+
+Run `npm affected:build` and check `dist/packages/js/package.json`: `rive-wasm` is now automatically dependency of `rive-js`. No duplication of code ;).
+
+To see dependency graph run : 
+```
+npm run dep-graph
+```
+
+## Customize config
+If you want to customize the config (build, test) or add new command, you can modify the `workspace.json` file.
+
+For example let's add a `publish` script that would deploy both lib at the same time to `npm`
+
+`workspace.json`: Under `projects/wasm/target` add:
+```json
+"publish": {
+  "builder": "@nrwl/workspace:run-commands",
+  "options": {
+    "commands": ["npm publish --tag={tag}"],
+    "cwd": "dist/packages/wasm"
+  }
+}
+```
+Do the same for [`projects/js/target`](./workspace.json#L9) (modify "cwd" accordingly).
 
 
-# Rive
+And in package.json add [the scripts](./package.json#L12): 
+```
+"publish:latest": "nx run-many --target=publish --access=public --all --tag=latest",
+"publish:next": "nx run-many --target=publish --access=public --all --tag=next"
+```
 
-This project was generated using [Nx](https://nx.dev).
-
-<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
-
-🔎 **Nx is a set of Extensible Dev Tools for Monorepos.**
-
-## Adding capabilities to your workspace
-
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
-
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
-
-Below are our core plugins:
-
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
-
-There are also many [community plugins](https://nx.dev/nx-community) you could add.
-
-## Generate an application
-
-Run `nx g @nrwl/react:app my-app` to generate an application.
-
-> You can use any of the plugins above to generate applications as well.
-
-When using Nx, you can create multiple applications and libraries in the same workspace.
-
-## Generate a library
-
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@rive/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Computation Memoization in the Cloud
-
-<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+Now you can run `npm run publish:latest` and it'll publish both libs on npm.
