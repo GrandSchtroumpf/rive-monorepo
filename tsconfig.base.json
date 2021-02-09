@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "rive-js": ["packages/js/src/index.ts"],
-      "rive-wasm": ["packages/wasm/src/index.ts"]
+      "rive-canvas": ["packages/canvas/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

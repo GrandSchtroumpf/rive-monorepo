@@ -7,25 +7,21 @@
       "projectType": "library",
       "targets": {
         "publish": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": ["npm publish --tag={tag}"],
-            "cwd": "dist/packages/wasm"
+            "cwd": "dist/packages/js"
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "packages/js/**/*.ts"
-            ]
+            "lintFilePatterns": ["packages/js/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/packages/js"
-          ],
+          "outputs": ["coverage/packages/js"],
           "options": {
             "jestConfig": "packages/js/jest.config.js",
             "passWithNoTests": true
@@ -33,64 +29,52 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/packages/js",
             "tsConfig": "packages/js/tsconfig.lib.json",
             "packageJson": "packages/js/package.json",
             "main": "packages/js/src/index.ts",
-            "assets": [
-              "packages/js/*.md"
-            ]
+            "assets": ["packages/js/*.md"]
           }
         }
       }
     },
-    "wasm": {
-      "root": "packages/wasm",
-      "sourceRoot": "packages/wasm/src",
+    "canvas": {
+      "root": "packages/canvas",
+      "sourceRoot": "packages/canvas/src",
       "projectType": "library",
       "targets": {
         "publish": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": ["npm publish --tag={tag}"],
-            "cwd": "dist/packages/wasm"
+            "cwd": "dist/packages/canvas"
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "packages/wasm/**/*.ts"
-            ]
+            "lintFilePatterns": ["packages/canvas/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/packages/wasm"
-          ],
+          "outputs": ["coverage/packages/canvas"],
           "options": {
-            "jestConfig": "packages/wasm/jest.config.js",
+            "jestConfig": "packages/canvas/jest.config.js",
             "passWithNoTests": true
           }
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/packages/wasm",
-            "tsConfig": "packages/wasm/tsconfig.lib.json",
-            "packageJson": "packages/wasm/package.json",
-            "main": "packages/wasm/src/index.ts",
-            "assets": [
-              "packages/wasm/*.md"
-            ]
+            "outputPath": "dist/packages/canvas",
+            "tsConfig": "packages/canvas/tsconfig.lib.json",
+            "packageJson": "packages/canvas/package.json",
+            "main": "packages/canvas/src/index.ts",
+            "assets": ["packages/canvas/*.md"]
           }
         }
       }

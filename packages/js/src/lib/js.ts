@@ -1,4 +1,4 @@
-import { wasm } from 'rive-wasm';
+import { canvas } from 'rive-canvas';
 export function js(): string {
-  return wasm();
+  return canvas();
 }

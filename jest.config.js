@@ -1,3 +1,3 @@
 module.exports = {
-  projects: [, '<rootDir>/packages/js', '<rootDir>/packages/wasm'],
+  projects: [, '<rootDir>/packages/js', '<rootDir>/packages/canvas'],
 };
