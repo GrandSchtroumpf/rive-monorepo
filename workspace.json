@@ -1,9 +1,87 @@
 {
-  
-  
   "version": 2,
-  
-  "projects": {},
+  "projects": {
+    "js": {
+      "root": "packages/js",
+      "sourceRoot": "packages/js/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "packages/js/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/packages/js"
+          ],
+          "options": {
+            "jestConfig": "packages/js/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/packages/js",
+            "tsConfig": "packages/js/tsconfig.lib.json",
+            "packageJson": "packages/js/package.json",
+            "main": "packages/js/src/index.ts",
+            "assets": [
+              "packages/js/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "wasm": {
+      "root": "packages/wasm",
+      "sourceRoot": "packages/wasm/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "packages/wasm/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/packages/wasm"
+          ],
+          "options": {
+            "jestConfig": "packages/wasm/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/packages/wasm",
+            "tsConfig": "packages/wasm/tsconfig.lib.json",
+            "packageJson": "packages/wasm/package.json",
+            "main": "packages/wasm/src/index.ts",
+            "assets": [
+              "packages/wasm/*.md"
+            ]
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "defaultCollection": "@nrwl/workspace"
   }

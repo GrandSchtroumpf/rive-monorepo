@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "rive-js": ["packages/js/src/index.ts"],
+      "rive-wasm": ["packages/wasm/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
